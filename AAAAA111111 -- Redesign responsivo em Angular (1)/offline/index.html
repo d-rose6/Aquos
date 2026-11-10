@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Detalhes do Dispositivo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page">
+
+  <header class="topbar">
+    <div class="topbar__inner">
+      <button type="button" class="btn btn--icon" aria-label="Voltar" onclick="history.back()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"></path></svg>
+      </button>
+      <div class="topbar__title"><span>Detalhes do Dispositivo</span></div>
+      <div class="topbar__spacer"></div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <section class="identity">
+      <h1 id="deviceName">Cozinha</h1>
+      <div class="identity__meta">
+        <span class="dot-row">
+          <span class="dot" id="statusDot"></span>
+          <span class="meta meta--strong" id="statusLabel">Online</span>
+        </span>
+        <span class="meta">ID <span id="deviceId">1</span></span>
+        <span class="meta">Últ. leitura <span id="lastRead">17:37</span></span>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <section class="stack">
+
+      <div class="block">
+        <div class="block__head">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M12 2.7l5.3 5.3a7.5 7.5 0 1 1-10.6 0z"></path></svg>
+          <h6>Fluxo em tempo real</h6>
+          <div class="chip-row">
+            <span class="label">Estado</span>
+            <span class="chip" data-valve-chip>Fechada</span>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="faucet">
+            <svg width="88" height="60" viewBox="0 0 88 60" fill="currentColor">
+              <rect x="0" y="10" width="8" height="32"></rect>
+              <rect x="8" y="20" width="52" height="13"></rect>
+              <path d="M60 20h16v32H63V33h-3z"></path>
+              <rect x="61" y="50" width="18" height="6"></rect>
+              <rect x="28" y="8" width="8" height="13"></rect>
+              <rect x="18" y="2" width="28" height="7"></rect>
+            </svg>
+          </div>
+
+          <div class="stage__readout">
+            <span class="readout__value" id="flow">0.00</span>
+            <span class="readout__unit">L/min</span>
+          </div>
+
+          <div class="stage__drops" id="drops"></div>
+          <div class="pool" id="pool"></div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block__head">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M4 20V10"></path><path d="M12 20V4"></path><path d="M20 20v-6"></path></svg>
+          <h6>Estatísticas</h6>
+        </div>
+        <div class="stats">
+          <div>
+            <span class="label">Hoje</span>
+            <div class="stats__value"><span id="today">29.24</span> <span>L</span></div>
+          </div>
+          <div>
+            <span class="label">Mensal</span>
+            <div class="stats__value"><span id="month">0.85</span> <span>L</span></div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <hr class="rule">
+
+    <section class="valve">
+      <div class="valve__head">
+        <div class="block__head block__head--tight">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7.9 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3 14.1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 7.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 10 3.6V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"></path></svg>
+          <h6>Controle da válvula</h6>
+          <span class="tag" id="valveTag">Indisponível</span>
+        </div>
+        <div class="chip-row">
+          <span class="label">Estado</span>
+          <span class="chip" data-valve-chip>Fechada</span>
+        </div>
+      </div>
+
+      <div class="valve__actions is-disabled" id="valveActions" aria-disabled="true">
+        <button type="button" class="btn btn--solid" id="btnOpen" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M18 15l-6-6-6 6"></path></svg>
+          Abrir
+        </button>
+        <button type="button" class="btn btn--outline" id="btnClose" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M6 9l6 6 6-6"></path></svg>
+          Fechar
+        </button>
+        <button type="button" class="btn btn--outline" id="btnToggle" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M3 8h14l-4-4"></path><path d="M21 16H7l4 4"></path></svg>
+          Alternar
+        </button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

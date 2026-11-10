@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="_ds/modernist-3d05ecf9-fd52-4518-9d0e-14d66f9d2d02/styles.css">
+<script src="_ds/modernist-3d05ecf9-fd52-4518-9d0e-14d66f9d2d02/_ds_bundle.js"></script>
+<style>
+  :root {
+    --page-bg: #184a9a;
+    --page-bg-2: #1e58ac;
+    --page-ink: #eef1f6;
+    --page-muted: rgba(238,241,246,.62);
+    --page-rule: rgba(238,241,246,.34);
+    --water: #3d97ff;
+    --ok: #3ecf7a;
+  }
+  body { margin: 0; background: var(--page-bg); color: var(--page-ink); -webkit-font-smoothing: antialiased; }
+  a { color: #9ec7ff; }
+  a:hover { color: #c8dfff; }
+  .hr { background: var(--page-rule); }
+  .btn-secondary { border-color: var(--page-rule); color: var(--page-ink); }
+  .btn-secondary:hover { background: rgba(238,241,246,.09); }
+  .btn:focus-visible, button:focus-visible { outline: 2px solid var(--page-ink); outline-offset: 2px; }
+  ::selection { background: rgba(238,241,246,.28); }
+  @keyframes pulseDot { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
+</style>
+</helmet>
+<div style="min-height:100vh;background:var(--page-bg);color:var(--page-ink);font-family:var(--font-body)">
+
+  <header style="position:sticky;top:0;z-index:5;background:var(--page-bg);border-bottom:2px solid var(--page-rule)">
+    <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:10px 16px;min-height:56px">
+      <a href="Perfil.dc.html" class="btn btn-secondary" style="width:44px;height:44px;padding:0;flex:none;justify-content:center;border-width:2px;text-decoration:none" aria-label="Perfil">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path></svg>
+      </a>
+      <div style="min-width:0;flex:1;text-align:center">
+        <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--page-muted)">Hidrômetro</div>
+        <div style="font-family:var(--font-heading);font-weight:800;font-size:17px;line-height:1.15;letter-spacing:-.01em">Dispositivos</div>
+      </div>
+      <button type="button" class="btn btn-secondary" style="width:44px;height:44px;padding:0;flex:none;justify-content:center;border-width:2px" aria-label="Adicionar dispositivo" onClick="{{ onAdd }}">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <main style="max-width:900px;margin:0 auto;padding:0 16px 56px">
+
+    <section style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px;padding:28px 0 20px">
+      <h1 style="margin:0;font-size:clamp(30px,8vw,52px);line-height:1;letter-spacing:-.02em;text-transform:uppercase">Meus pontos</h1>
+      <div style="display:flex;flex-wrap:wrap;gap:8px 18px">
+        <span style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--page-muted)">{{ countLabel }}</span>
+        <span style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--page-muted)">{{ openLabel }}</span>
+        <span style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--page-muted)">Total hoje <strong style="color:var(--page-ink);font-variant-numeric:tabular-nums">{{ totalToday }} L</strong></span>
+      </div>
+    </section>
+
+    <hr class="hr" style="margin:0">
+
+    <div style="display:{{ filtersDisplay }};align-items:center;gap:10px;padding:14px 0 12px">
+      <sc-for list="{{ filters }}" as="f" hint-placeholder-count="3">
+        <button type="button" style="padding:7px 14px;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border:2px solid var(--page-rule);background:{{ f.bg }};color:{{ f.fg }}" style-hover="border-color:var(--page-ink)" onClick="{{ f.onClick }}">{{ f.label }}</button>
+      </sc-for>
+    </div>
+
+    <hr class="hr" style="margin:0">
+
+    <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+      <section style="padding:40px 0 8px">
+        <div style="font-family:var(--font-heading);font-weight:800;font-size:22px;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:8px">Nenhum dispositivo</div>
+        <p style="margin:0;font-size:14px;line-height:1.5;color:var(--page-muted);max-width:42ch">Configure seu primeiro hidrômetro para acompanhar o consumo e controlar a válvula.</p>
+      </section>
+    </sc-if>
+
+    <section>
+      <sc-for list="{{ rows }}" as="d" hint-placeholder-count="4">
+        <a href="{{ d.href }}" style="display:grid;grid-template-columns:{{ rowCols }};align-items:center;column-gap:16px;row-gap:12px;padding:18px 0;border-bottom:2px solid var(--page-rule);text-decoration:none;color:var(--page-ink)" style-hover="background:rgba(238,241,246,.05)">
+
+          <div style="min-width:0;grid-column:1">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="width:7px;height:7px;flex:none;background:{{ d.dot }};animation:pulseDot 2.4s ease-in-out infinite"></span>
+              <span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--page-muted);white-space:nowrap">{{ d.status }} · ID {{ d.id }}</span>
+            </div>
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:clamp(20px,5.5vw,26px);line-height:1.05;letter-spacing:-.01em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ d.name }}</div>
+            <div style="margin-top:6px;font-size:12px;color:var(--page-muted)">{{ d.place }} · últ. leitura {{ d.lastRead }}</div>
+          </div>
+
+          <div style="grid-column:{{ colToday }};text-align:{{ alignToday }};min-width:96px;display:{{ todayDisplay }}">
+            <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--page-muted);margin-bottom:4px">Hoje</div>
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:20px;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums">{{ d.today }} <span style="font-size:.6em">L</span></div>
+            <div style="margin-top:6px;font-size:11px;color:var(--page-muted);font-variant-numeric:tabular-nums">{{ d.flow }} L/min</div>
+          </div>
+
+          <div style="grid-column:{{ colValve }};display:flex;align-items:center;justify-content:flex-end;gap:12px">
+            <span style="display:inline-flex;align-items:center;padding:5px 11px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:{{ d.chipBg }};color:#fff">{{ d.valve }}</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" style="flex:none;color:var(--page-muted)"><path d="M9 6l6 6-6 6"></path></svg>
+          </div>
+
+        </a>
+      </sc-for>
+    </section>
+
+    <button type="button" class="btn btn-secondary" style="margin-top:22px;min-height:52px;width:100%;justify-content:flex-start;gap:10px;padding:0 18px;font-size:14px;letter-spacing:.06em;text-transform:uppercase;border-width:2px;border-style:dashed" onClick="{{ onAdd }}">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+      Adicionar dispositivo
+    </button>
+
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;useDemoData&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;showFilters&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;showTodayColumn&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const AQ_KEY = 'aquos.devices';
+const aqLoad = () => { try { return JSON.parse(localStorage.getItem(AQ_KEY)) || []; } catch (e) { return []; } };
+const aqSave = list => { try { localStorage.setItem(AQ_KEY, JSON.stringify(list)); } catch (e) {} };
+class Component extends DCLogic {
+  state = { filter: 'Todos' };
+
+  demo = [
+    { id: '1', name: 'Cozinha',   place: 'Casa principal', status: 'Online',  open: true,  flow: 6.42, today: 29.24, lastRead: '17:37' },
+    { id: '2', name: 'Banheiro',  place: 'Casa principal', status: 'Online',  open: false, flow: 0,    today: 41.06, lastRead: '17:36' },
+    { id: '3', name: 'Jardim',    place: 'Área externa',   status: 'Online',  open: true,  flow: 2.18, today: 12.80, lastRead: '17:35' },
+    { id: '4', name: 'Caixa d\u2019água', place: 'Laje',   status: 'Offline', open: false, flow: 0,    today: 0,     lastRead: 'ontem 22:14' }
+  ];
+  get devices() { return (this.props.useDemoData ?? false) ? this.demo : aqLoad(); }
+
+  componentDidMount() {
+    this.measure = () => {
+      const el = document.querySelector('main');
+      const w = el ? el.getBoundingClientRect().width : window.innerWidth;
+      const narrow = w < 560;
+      if (narrow !== this.state.narrow) this.setState({ narrow });
+    };
+    this.measure();
+    this.ro = new ResizeObserver(() => this.measure());
+    this.ro.observe(document.documentElement);
+    window.addEventListener('resize', this.measure);
+  }
+  componentWillUnmount() {
+    if (this.ro) this.ro.disconnect();
+    window.removeEventListener('resize', this.measure);
+  }
+
+  renderVals() {
+    const f = this.state.filter;
+    const narrow = !!this.state.narrow;
+    const showToday = this.props.showTodayColumn ?? true;
+    const all = this.devices;
+    const list = f === 'Abertas' ? all.filter(d => d.open)
+      : f === 'Offline' ? all.filter(d => d.status === 'Offline')
+      : all;
+
+    const chip = (label) => ({
+      label,
+      bg: f === label ? 'var(--page-ink)' : 'transparent',
+      fg: f === label ? 'var(--page-bg)' : 'var(--page-ink)',
+      onClick: () => this.setState({ filter: label })
+    });
+
+    return {
+      filtersDisplay: (this.props.showFilters ?? true) ? 'flex' : 'none',
+      todayDisplay: showToday ? 'block' : 'none',
+      rowCols: narrow ? '1fr auto' : (showToday ? '1fr auto auto' : '1fr auto'),
+      colToday: narrow ? '1' : '2',
+      alignToday: narrow ? 'left' : 'right',
+      colValve: narrow ? '2' : (showToday ? '3' : '2'),
+      filters: ['Todos', 'Abertas', 'Offline'].map(chip),
+      countLabel: all.length + (all.length === 1 ? ' dispositivo' : ' dispositivos'),
+      openLabel: all.filter(d => d.open).length + ' abertas',
+      totalToday: all.reduce((s, d) => s + d.today, 0).toFixed(2),
+      isEmpty: all.length === 0,
+      rows: list.map(d => ({
+        id: d.id,
+        name: d.name,
+        place: d.place,
+        status: d.status,
+        lastRead: d.lastRead,
+        today: d.today.toFixed(2),
+        flow: d.flow.toFixed(2),
+        valve: d.open ? 'Aberta' : 'Fechada',
+        chipBg: d.open ? 'var(--water)' : 'var(--color-accent-500)',
+        dot: d.status === 'Online' ? 'var(--ok)' : 'var(--color-accent-500)',
+        href: 'Detalhes do Dispositivo.dc.html?id=' + encodeURIComponent(d.id)
+      })),
+      onAdd: () => { window.location.href = 'Novo Dispositivo.dc.html'; }
+    };
+  }
+}
+</script>
+</body>
+</html>

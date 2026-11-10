@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="_ds/modernist-3d05ecf9-fd52-4518-9d0e-14d66f9d2d02/styles.css">
+<script src="_ds/modernist-3d05ecf9-fd52-4518-9d0e-14d66f9d2d02/_ds_bundle.js"></script>
+<style>
+  :root {
+    --page-bg: #184a9a;
+    --page-ink: #eef1f6;
+    --page-muted: rgba(238,241,246,.62);
+    --page-rule: rgba(238,241,246,.34);
+    --water: #3d97ff;
+    --ok: #3ecf7a;
+  }
+  body { margin: 0; background: var(--page-bg); color: var(--page-ink); -webkit-font-smoothing: antialiased; }
+  a { color: #9ec7ff; }
+  a:hover { color: #c8dfff; }
+  .btn-secondary { border-color: var(--page-rule); color: var(--page-ink); }
+  .btn-secondary:hover { background: rgba(238,241,246,.09); }
+  .btn:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--page-ink); outline-offset: 2px; }
+  input::placeholder { color: rgba(238,241,246,.42); }
+  ::selection { background: rgba(238,241,246,.28); }
+  @keyframes spin { to { transform: rotate(360deg) } }
+  @keyframes blinkLed { 0%,49% { opacity: 1 } 50%,100% { opacity: .15 } }
+</style>
+</helmet>
+<div style="min-height:100vh;background:var(--page-bg);color:var(--page-ink);font-family:var(--font-body)">
+
+  <header style="position:sticky;top:0;z-index:5;background:var(--page-bg);border-bottom:2px solid var(--page-rule)">
+    <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:10px 16px;min-height:56px">
+      <button type="button" class="btn btn-secondary" style="width:44px;height:44px;padding:0;flex:none;justify-content:center;border-width:2px" aria-label="Voltar" onClick="{{ onBack }}">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"></path></svg>
+      </button>
+      <div style="min-width:0;flex:1;text-align:center">
+        <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--page-muted)">Hidrômetro</div>
+        <div style="font-family:var(--font-heading);font-weight:800;font-size:17px;line-height:1.15;letter-spacing:-.01em">Novo dispositivo</div>
+      </div>
+      <div style="width:44px;flex:none"></div>
+    </div>
+  </header>
+
+  <main style="max-width:560px;margin:0 auto;padding:0 16px 56px">
+
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;padding:22px 0 0">
+      <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+        <div>
+          <div style="height:4px;background:{{ s.bar }};transition:background .3s"></div>
+          <div style="display:flex;gap:6px;margin-top:8px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:{{ s.fg }}">
+            <span style="font-variant-numeric:tabular-nums">{{ s.num }}</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ s.label }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ isPrepare }}" hint-placeholder-val="{{ true }}">
+      <section style="padding:30px 0 0">
+        <h1 style="margin:0 0 10px;font-size:clamp(28px,8vw,40px);line-height:1;letter-spacing:-.02em;text-transform:uppercase">Conecte ao dispositivo</h1>
+        <p style="margin:0 0 24px;font-size:14px;line-height:1.5;color:var(--page-muted);text-wrap:pretty">Ao ligar sem configuração, o hidrômetro cria uma rede Wi-Fi própria. Conecte o celular a ela para configurar localmente, sem internet.</p>
+
+        <div style="border:2px solid var(--page-rule);margin-bottom:22px">
+          <div style="display:flex;align-items:center;gap:14px;padding:16px">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" style="flex:none"><path d="M5 12.5a10 10 0 0 1 14 0"></path><path d="M8.5 16a5 5 0 0 1 7 0"></path><path d="M12 19.5h.01"></path><path d="M1.5 9a15 15 0 0 1 21 0"></path></svg>
+            <div style="min-width:0;flex:1">
+              <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--page-muted);margin-bottom:4px">Rede do dispositivo</div>
+              <div style="font-family:var(--font-heading);font-weight:800;font-size:20px;letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ apSsid }}</div>
+            </div>
+            <span style="width:8px;height:8px;flex:none;background:var(--water);box-shadow:0 0 10px var(--water);animation:blinkLed 1s steps(1) infinite"></span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;border-top:2px solid var(--page-rule)">
+            <div style="padding:12px 16px;border-right:2px solid var(--page-rule)">
+              <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--page-muted);margin-bottom:4px">Senha</div>
+              <div style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums">{{ apPassword }}</div>
+            </div>
+            <div style="padding:12px 16px">
+              <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--page-muted);margin-bottom:4px">Endereço local</div>
+              <div style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums">{{ apIp }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:26px;font-size:14px;line-height:1.45">
+          <div style="display:flex;gap:12px"><span style="font-weight:700;font-variant-numeric:tabular-nums">01</span><span>Ligue o hidrômetro na energia e aguarde 10 segundos.</span></div>
+          <div style="display:flex;gap:12px"><span style="font-weight:700;font-variant-numeric:tabular-nums">02</span><span>Abra as configurações de Wi-Fi do celular e conecte à rede acima.</span></div>
+          <div style="display:flex;gap:12px"><span style="font-weight:700;font-variant-numeric:tabular-nums">03</span><span>Se o celular avisar que a rede não tem internet, escolha manter a conexão e volte ao app.</span></div>
+        </div>
+
+        <sc-if value="{{ hasApError }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:10px 14px;margin-bottom:14px;border:2px solid var(--color-accent-500);font-size:13px;color:#fff;background:rgba(236,48,19,.22)">Dispositivo não encontrado em {{ apIp }}. Verifique se o celular está na rede {{ apSsid }}.</div>
+        </sc-if>
+
+        <button type="button" class="btn" style="width:100%;min-height:54px;justify-content:space-between;gap:10px;padding:0 18px;font-size:15px;letter-spacing:.06em;text-transform:uppercase;background:var(--page-ink);color:var(--page-bg)" style-hover="background:#ffffff" onClick="{{ onCheckAp }}" disabled="{{ checking }}">
+          <span>{{ checkLabel }}</span>
+          <sc-if value="{{ checking }}" hint-placeholder-val="{{ false }}">
+            <span style="width:16px;height:16px;box-sizing:border-box;border:2px solid rgba(24,74,154,.25);border-top-color:var(--page-bg);border-radius:50%;animation:spin .8s linear infinite"></span>
+          </sc-if>
+          <sc-if value="{{ notChecking }}" hint-placeholder-val="{{ true }}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+          </sc-if>
+        </button>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isWifi }}" hint-placeholder-val="{{ false }}">
+      <section style="padding:30px 0 0">
+        <h1 style="margin:0 0 10px;font-size:clamp(28px,8vw,40px);line-height:1;letter-spacing:-.02em;text-transform:uppercase">Rede Wi-Fi</h1>
+        <p style="margin:0 0 24px;font-size:14px;line-height:1.5;color:var(--page-muted);text-wrap:pretty">Conectado a {{ apSsid }}. Escolha a rede da sua casa — o ESP32 só funciona em 2,4 GHz.</p>
+
+        <form onSubmit="{{ onConfigure }}" style="display:flex;flex-direction:column;gap:18px">
+          <label style="display:block">
+            <span style="display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--page-muted);margin-bottom:8px">Nome do dispositivo</span>
+            <input type="text" placeholder="Ex.: Cozinha" value="{{ deviceName }}" onChange="{{ onDeviceName }}" style="width:100%;box-sizing:border-box;min-height:50px;padding:0 14px;font-family:var(--font-body);font-size:16px;color:var(--page-ink);background:transparent;border:2px solid var(--page-rule);border-radius:0" style-focus="border-color:var(--page-ink)">
+          </label>
+
+          <div>
+            <span style="display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--page-muted);margin-bottom:8px">Redes vistas pelo dispositivo</span>
+            <div style="display:flex;flex-direction:column;border:2px solid var(--page-rule)">
+              <sc-for list="{{ networks }}" as="n" hint-placeholder-count="3">
+                <button type="button" onClick="{{ n.onPick }}" style="display:flex;align-items:center;gap:12px;min-height:48px;padding:0 14px;font-family:var(--font-body);font-size:15px;text-align:left;border:0;border-bottom:{{ n.border }};cursor:pointer;background:{{ n.bg }};color:{{ n.fg }}" style-hover="background:rgba(238,241,246,.09)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" style="flex:none"><path d="M5 12.5a10 10 0 0 1 14 0"></path><path d="M8.5 16a5 5 0 0 1 7 0"></path><path d="M12 19.5h.01"></path><path d="M1.5 9a15 15 0 0 1 21 0" opacity="{{ n.strong }}"></path></svg>
+                  <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ n.ssid }}</span>
+                  <span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.7">{{ n.band }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+
+          <label style="display:block">
+            <span style="display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--page-muted);margin-bottom:8px">Nome da rede (SSID)</span>
+            <input type="text" placeholder="Nome da rede" value="{{ ssid }}" onChange="{{ onSsid }}" autocapitalize="off" style="width:100%;box-sizing:border-box;min-height:50px;padding:0 14px;font-family:var(--font-body);font-size:16px;color:var(--page-ink);background:transparent;border:2px solid var(--page-rule);border-radius:0" style-focus="border-color:var(--page-ink)">
+          </label>
+
+          <label style="display:block">
+            <span style="display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--page-muted);margin-bottom:8px">Senha do Wi-Fi</span>
+            <div style="position:relative">
+              <input type="{{ pwType }}" placeholder="••••••••" value="{{ password }}" onChange="{{ onPassword }}" style="width:100%;box-sizing:border-box;min-height:50px;padding:0 56px 0 14px;font-family:var(--font-body);font-size:16px;color:var(--page-ink);background:transparent;border:2px solid var(--page-rule);border-radius:0" style-focus="border-color:var(--page-ink)">
+              <button type="button" aria-label="Mostrar senha" onClick="{{ togglePw }}" style="position:absolute;right:2px;top:2px;bottom:2px;width:48px;display:flex;align-items:center;justify-content:center;border:0;background:transparent;color:var(--page-muted);cursor:pointer" style-hover="color:var(--page-ink)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+          </label>
+
+          <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:10px 14px;border:2px solid var(--color-accent-500);font-size:13px;color:#fff;background:rgba(236,48,19,.22)">{{ error }}</div>
+          </sc-if>
+
+          <button type="submit" class="btn" style="margin-top:4px;min-height:54px;justify-content:space-between;gap:10px;padding:0 18px;font-size:15px;letter-spacing:.06em;text-transform:uppercase;background:var(--page-ink);color:var(--page-bg)" style-hover="background:#ffffff">
+            <span>Configurar</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+          </button>
+        </form>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isConfig }}" hint-placeholder-val="{{ false }}">
+      <section style="padding:30px 0 0">
+        <h1 style="margin:0 0 10px;font-size:clamp(28px,8vw,40px);line-height:1;letter-spacing:-.02em;text-transform:uppercase">{{ configTitle }}</h1>
+        <p style="margin:0 0 24px;font-size:14px;line-height:1.5;color:var(--page-muted)">{{ configSub }}</p>
+
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px">
+          <span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--page-muted)">Progresso</span>
+          <span style="font-family:var(--font-heading);font-weight:800;font-size:28px;line-height:1;font-variant-numeric:tabular-nums">{{ percent }}%</span>
+        </div>
+        <div style="height:6px;background:rgba(238,241,246,.18);margin-bottom:24px">
+          <div style="height:100%;width:{{ percentW }};background:var(--water);transition:width .5s ease"></div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;border-top:2px solid var(--page-rule)">
+          <sc-for list="{{ tasks }}" as="t" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:14px;min-height:56px;border-bottom:2px solid var(--page-rule);color:{{ t.fg }}">
+              <span style="width:20px;height:20px;flex:none;display:flex;align-items:center;justify-content:center">
+                <sc-if value="{{ t.done }}" hint-placeholder-val="{{ false }}">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="2.5" stroke-linecap="square"><path d="M20 6L9 17l-5-5"></path></svg>
+                </sc-if>
+                <sc-if value="{{ t.active }}" hint-placeholder-val="{{ false }}">
+                  <span style="width:16px;height:16px;box-sizing:border-box;border:2px solid rgba(238,241,246,.25);border-top-color:var(--page-ink);border-radius:50%;animation:spin .8s linear infinite"></span>
+                </sc-if>
+                <sc-if value="{{ t.waiting }}" hint-placeholder-val="{{ true }}">
+                  <span style="width:8px;height:8px;background:rgba(238,241,246,.3)"></span>
+                </sc-if>
+              </span>
+              <span style="font-size:15px">{{ t.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr;border:2px solid var(--page-rule);margin-top:24px">
+            <div style="padding:12px 16px;border-right:2px solid var(--page-rule)">
+              <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--page-muted);margin-bottom:4px">IP na rede</div>
+              <div style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums">{{ lanIp }}</div>
+            </div>
+            <div style="padding:12px 16px;min-width:0">
+              <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--page-muted);margin-bottom:4px">Endereço</div>
+              <div style="font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ hostname }}</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:20px">
+            <a href="Dispositivos.dc.html" class="btn" style="min-height:54px;justify-content:space-between;gap:10px;padding:0 18px;font-size:15px;letter-spacing:.06em;text-transform:uppercase;background:var(--page-ink);color:var(--page-bg);text-decoration:none" style-hover="background:#ffffff">
+              <span>Ver meus dispositivos</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+            </a>
+            <a href="Novo Dispositivo.dc.html" class="btn btn-secondary" style="min-height:50px;justify-content:flex-start;padding:0 18px;font-size:14px;letter-spacing:.06em;text-transform:uppercase;border-width:2px;text-decoration:none">Configurar outro</a>
+          </div>
+        </sc-if>
+      </section>
+    </sc-if>
+
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;simulateApNotFound&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const AQ_KEY = 'aquos.devices';
+const aqLoad = () => { try { return JSON.parse(localStorage.getItem(AQ_KEY)) || []; } catch (e) { return []; } };
+const aqSave = list => { try { localStorage.setItem(AQ_KEY, JSON.stringify(list)); } catch (e) {} };
+class Component extends DCLogic {
+  state = { step: 0, deviceName: '', ssid: '', password: '', showPw: false, error: '', task: 0, checking: false, apError: false };
+  apId = 'A3F2';
+
+  networks = [
+    { ssid: 'Casa_Ribeiro', band: '2,4 GHz', strong: 1 },
+    { ssid: 'Casa_Ribeiro_5G', band: '5 GHz', strong: 1 },
+    { ssid: 'NET_VIRTUA_88', band: '2,4 GHz', strong: 0.3 }
+  ];
+  taskLabels = ['Enviando rede e nome para 192.168.4.1', 'Dispositivo reiniciando', 'Dispositivo conectando ao seu Wi-Fi', 'Celular voltando à rede da casa', 'Localizando o dispositivo na rede local'];
+
+  componentWillUnmount() { clearInterval(this.iv); clearTimeout(this.ct); }
+
+  checkAp() {
+    this.setState({ checking: true, apError: false });
+    clearTimeout(this.ct);
+    this.ct = setTimeout(() => {
+      const ok = !(this.props.simulateApNotFound ?? false);
+      this.setState({ checking: false, apError: !ok, step: ok ? 1 : 0 });
+    }, 1300);
+  }
+
+  configure(e) {
+    e.preventDefault();
+    const { deviceName, ssid, password } = this.state;
+    let error = '';
+    if (!deviceName.trim()) error = 'Dê um nome ao dispositivo.';
+    else if (!ssid.trim()) error = 'Informe o nome da rede.';
+    else if (/5G|5 ?GHz/i.test(ssid)) error = 'Redes de 5 GHz não são suportadas. Escolha uma rede de 2,4 GHz.';
+    else if (password.length < 8) error = 'A senha do Wi-Fi precisa ter pelo menos 8 caracteres.';
+    if (error) return this.setState({ error });
+    this.setState({ error: '', step: 2, task: 0 });
+    clearInterval(this.iv);
+    this.iv = setInterval(() => {
+      this.setState(s => {
+        const task = s.task + 1;
+        if (task >= this.taskLabels.length) {
+          clearInterval(this.iv);
+          const list = aqLoad();
+          list.push({ id: String(Date.now()).slice(-6), name: s.deviceName.trim(), place: s.ssid, status: 'Online', open: false, flow: 0, today: 0, lastRead: 'agora' });
+          aqSave(list);
+        }
+        return { task };
+      });
+    }, 1400);
+  }
+
+  back() {
+    const step = this.state.step;
+    if (step === 0 || this.state.task >= this.taskLabels.length) { window.location.href = aqLoad().length ? 'Dispositivos.dc.html' : 'Login.dc.html'; return; }
+    clearInterval(this.iv);
+    this.setState({ step: step - 1, task: 0 });
+  }
+
+  renderVals() {
+    const { step, task } = this.state;
+    const total = this.taskLabels.length;
+    const done = step === 2 && task >= total;
+    const names = ['Conectar', 'Wi-Fi', 'Configurar'];
+    const slug = (this.state.deviceName || 'aquos').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'aquos';
+    return {
+      steps: names.map((label, i) => ({
+        num: '0' + (i + 1), label,
+        bar: i < step || done ? 'var(--page-ink)' : i === step ? 'var(--water)' : 'rgba(238,241,246,.2)',
+        fg: i <= step ? 'var(--page-ink)' : 'var(--page-muted)'
+      })),
+      apSsid: 'AQUOS-Setup-' + this.apId,
+      apPassword: '12345678',
+      apIp: '192.168.4.1',
+      lanIp: '192.168.0.47',
+      hostname: slug + '.local',
+      checking: this.state.checking,
+      notChecking: !this.state.checking,
+      hasApError: this.state.apError,
+      checkLabel: this.state.checking ? 'Procurando dispositivo…' : 'Já conectei',
+      onCheckAp: () => this.checkAp(),
+      isPrepare: step === 0, isWifi: step === 1, isConfig: step === 2, isDone: done,
+      deviceName: this.state.deviceName, ssid: this.state.ssid, password: this.state.password,
+      pwType: this.state.showPw ? 'text' : 'password',
+      hasError: !!this.state.error, error: this.state.error,
+      networks: this.networks.map((n, i) => {
+        const sel = n.ssid === this.state.ssid;
+        return {
+          ...n,
+          bg: sel ? 'var(--page-ink)' : 'transparent',
+          fg: sel ? 'var(--page-bg)' : 'var(--page-ink)',
+          border: i < this.networks.length - 1 ? '2px solid var(--page-rule)' : '0',
+          onPick: () => this.setState({ ssid: n.ssid, error: '' })
+        };
+      }),
+      configTitle: done ? 'Pronto' : 'Configurando',
+      configSub: done ? `${this.state.deviceName || 'Dispositivo'} está conectado à rede ${this.state.ssid}.` : 'Não feche o app. O celular perderá a rede do dispositivo durante o processo.',
+      percent: Math.round(Math.min(task, total) / total * 100),
+      percentW: (Math.min(task, total) / total * 100) + '%',
+      tasks: this.taskLabels.map((label, i) => ({
+        label,
+        done: i < task, active: i === task, waiting: i > task,
+        fg: i <= task ? 'var(--page-ink)' : 'var(--page-muted)'
+      })),
+      toWifi: () => this.setState({ step: 1 }),
+      onConfigure: e => this.configure(e),
+      onBack: () => this.back(),
+      togglePw: () => this.setState(s => ({ showPw: !s.showPw })),
+      onDeviceName: e => this.setState({ deviceName: e.target.value }),
+      onSsid: e => this.setState({ ssid: e.target.value }),
+      onPassword: e => this.setState({ password: e.target.value })
+    };
+  }
+}
+</script>
+</body>
+</html>

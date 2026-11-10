@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="_ds/modernist-3d05ecf9-fd52-4518-9d0e-14d66f9d2d02/styles.css">
+<script src="_ds/modernist-3d05ecf9-fd52-4518-9d0e-14d66f9d2d02/_ds_bundle.js"></script>
+<style>
+  :root {
+    --page-bg: #184a9a;
+    --page-ink: #eef1f6;
+    --page-muted: rgba(238,241,246,.62);
+    --page-rule: rgba(238,241,246,.34);
+    --water: #3d97ff;
+  }
+  body { margin: 0; background: var(--page-bg); color: var(--page-ink); -webkit-font-smoothing: antialiased; overflow: hidden; }
+  a { color: #9ec7ff; }
+  a:hover { color: #c8dfff; }
+  @keyframes letterIn {
+    0%   { transform: translate3d(0,28px,0); opacity: 0 }
+    100% { transform: translate3d(0,0,0); opacity: 1 }
+  }
+  @keyframes fillRise {
+    0%   { clip-path: inset(100% 0 0 0) }
+    100% { clip-path: inset(0 0 0 0) }
+  }
+  @keyframes waveSlide {
+    0%   { transform: translate3d(0,0,0) }
+    100% { transform: translate3d(-50%,0,0) }
+  }
+  @keyframes dropIn {
+    0%   { transform: translate3d(0,-70px,0) scaleY(.6); opacity: 0 }
+    20%  { opacity: 1 }
+    70%  { transform: translate3d(0,0,0) scaleY(1.2); opacity: 1 }
+    100% { transform: translate3d(0,6px,0) scaleY(.4); opacity: 0 }
+  }
+  @keyframes ringOut {
+    0%   { transform: scale(.3); opacity: .7 }
+    100% { transform: scale(2.6); opacity: 0 }
+  }
+  @keyframes fadeUp {
+    0%   { transform: translate3d(0,10px,0); opacity: 0 }
+    100% { transform: translate3d(0,0,0); opacity: 1 }
+  }
+  @keyframes barGrow {
+    0%   { transform: scaleX(0) }
+    100% { transform: scaleX(1) }
+  }
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;background:var(--page-bg);color:var(--page-ink);font-family:var(--font-body);position:relative;overflow:hidden">
+
+  <div style="position:absolute;left:0;right:0;bottom:0;height:34vh;z-index:0;overflow:hidden;opacity:.5">
+    <div style="position:absolute;bottom:0;left:0;width:200%;height:100%;background:linear-gradient(180deg,rgba(61,151,255,.06),rgba(61,151,255,.34));animation:waveSlide 9s linear infinite"></div>
+  </div>
+
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding:0 20px">
+
+    <div style="position:relative;width:14px;height:20px;margin-bottom:26px">
+      <span style="position:absolute;inset:0;background:var(--water);clip-path:polygon(50% 0%,100% 62%,78% 100%,22% 100%,0% 62%);box-shadow:0 0 18px rgba(61,151,255,.6);animation:dropIn .5s cubic-bezier(.4,.1,.7,1) 0s both"></span>
+      <span style="position:absolute;left:-14px;top:8px;width:42px;height:42px;border:2px solid var(--water);border-radius:50%;animation:ringOut .55s ease-out .45s both"></span>
+    </div>
+
+    <div style="position:relative;display:flex;gap:clamp(4px,1.6vw,12px)">
+      <sc-for list="{{ letters }}" as="l" hint-placeholder-count="5">
+        <span style="position:relative;display:inline-block;font-family:var(--font-heading);font-weight:800;font-size:clamp(52px,17vw,132px);line-height:.9;letter-spacing:-.02em;animation:letterIn .38s cubic-bezier(.2,.8,.25,1) {{ l.delay }} both">
+          <span style="color:rgba(238,241,246,.26)">{{ l.char }}</span>
+          <span style="position:absolute;left:0;top:0;color:var(--page-ink);animation:fillRise .4s ease-out {{ l.fillDelay }} both">{{ l.char }}</span>
+        </span>
+      </sc-for>
+    </div>
+
+    <div style="width:100%;max-width:340px;height:2px;margin-top:30px;background:rgba(238,241,246,.2);overflow:hidden">
+      <div style="width:100%;height:100%;background:var(--page-ink);transform-origin:left;animation:barGrow .95s cubic-bezier(.5,0,.3,1) .15s both"></div>
+    </div>
+
+    <div style="margin-top:18px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--page-muted);animation:fadeUp .35s ease-out .75s both">Monitoramento de água</div>
+
+  </div>
+
+  <a href="Login.dc.html" style="position:absolute;z-index:3;left:0;right:0;bottom:34px;display:flex;justify-content:center;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--page-muted);text-decoration:none;animation:fadeUp .3s ease-out .9s both">Toque para continuar</a>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:840},&quot;wordmark&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;AQUOS&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;autoAdvanceSeconds&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:1.3,&quot;min&quot;:0,&quot;max&quot;:10,&quot;step&quot;:0.1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;}}">
+class Component extends DCLogic {
+  componentDidMount() {
+    const ms = (this.props.autoAdvanceSeconds ?? 1.3) * 1000;
+    if (ms > 0 && !this.t) this.t = setTimeout(() => { window.location.href = 'Login.dc.html'; }, ms);
+  }
+  componentWillUnmount() { clearTimeout(this.t); }
+
+  renderVals() {
+    const word = (this.props.wordmark ?? 'AQUOS').toUpperCase().split('');
+    return {
+      letters: word.map((char, i) => ({
+        char,
+        delay: (0.2 + i * 0.05).toFixed(2) + 's',
+        fillDelay: (0.45 + i * 0.07).toFixed(2) + 's'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
